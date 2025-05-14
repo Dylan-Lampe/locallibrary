@@ -53,3 +53,21 @@ urlpatterns += [
     path('book/<int:pk>/delete/', views.BookDelete.as_view(), name='book-delete'),
 ]
 
+from django.contrib import admin
+from django.urls import path, include
+from ninja import NinjaAPI
+from catalog.api import router as catalog_router
+
+api = NinjaAPI(
+    title="Local Library API",
+    version="1.0.0",
+    # default auth across all endpoints:
+    auth=["django_auth"]  # see next section
+)
+
+api.add_router("/catalog/", catalog_router)
+
+urlpatterns += [
+    path("api/", api.urls),
+]
+
